@@ -103,8 +103,20 @@ async function createUploadDirectories() {
         await fs.mkdir(GALLERY_UPLOADS_DIR, { recursive: true });
         await fs.mkdir(HERO_UPLOADS_DIR, { recursive: true });
         console.log('✅ Upload directories created');
+        
+        // Verify directories exist
+        const uploadsExists = await fs.access(UPLOADS_DIR).then(() => true).catch(() => false);
+        const galleryExists = await fs.access(GALLERY_UPLOADS_DIR).then(() => true).catch(() => false);
+        const heroExists = await fs.access(HERO_UPLOADS_DIR).then(() => true).catch(() => false);
+        
+        console.log(`📁 Upload directories status:`, {
+            uploads: uploadsExists,
+            gallery: galleryExists,
+            hero: heroExists
+        });
     } catch (error) {
         console.error('❌ Error creating upload directories:', error);
+        throw error; // Re-throw to prevent server from starting with broken uploads
     }
 }
 
@@ -287,6 +299,14 @@ app.get('/api/gallery', async (req, res) => {
 // Upload gallery images (admin only)
 app.post('/api/gallery/upload', adminLimiter, validatePassword, uploadGallery.array('images', 10), async (req, res) => {
     try {
+        // Check if upload directories exist
+        try {
+            await fs.access(GALLERY_UPLOADS_DIR);
+        } catch (dirError) {
+            console.error('Gallery upload directory not found, creating...');
+            await createUploadDirectories();
+        }
+
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ error: 'No files uploaded' });
         }
@@ -309,7 +329,7 @@ app.post('/api/gallery/upload', adminLimiter, validatePassword, uploadGallery.ar
         res.json({ success: true, message: `${newImages.length} images uploaded successfully` });
     } catch (error) {
         console.error('Error uploading gallery images:', error);
-        res.status(500).json({ error: 'Failed to upload images' });
+        res.status(500).json({ error: `Failed to upload images: ${error.message}` });
     }
 });
 
@@ -418,12 +438,30 @@ app.get('/admin', (req, res) => {
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'healthy', 
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime()
-    });
+app.get('/health', async (req, res) => {
+    try {
+        // Check upload directories
+        const uploadsExists = await fs.access(UPLOADS_DIR).then(() => true).catch(() => false);
+        const galleryExists = await fs.access(GALLERY_UPLOADS_DIR).then(() => true).catch(() => false);
+        const heroExists = await fs.access(HERO_UPLOADS_DIR).then(() => true).catch(() => false);
+        
+        res.json({
+            status: 'healthy',
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime(),
+            uploads: {
+                main: uploadsExists,
+                gallery: galleryExists,
+                hero: heroExists
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'unhealthy',
+            error: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
 });
 
 // 404 handler
