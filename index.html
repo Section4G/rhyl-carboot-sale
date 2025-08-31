@@ -790,7 +790,7 @@
     </section>
 
     <!-- Main Content -->
-    <div id="mainContent" style="opacity: 0; transition: opacity 0.5s ease;">
+    <div id="mainContent" style="opacity: 0.95; transition: opacity 0.5s ease;">
         
         <!-- Pricing Section -->
         <section id="pricing" class="section">
@@ -1063,8 +1063,19 @@
 
         // Show main content after brief delay
         setTimeout(() => {
-            document.getElementById('mainContent').style.opacity = '1';
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) {
+                mainContent.style.opacity = '1';
+            }
         }, 100);
+        
+        // Fallback: ensure content is visible even if JavaScript fails
+        window.addEventListener('load', () => {
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent && mainContent.style.opacity === '0') {
+                mainContent.style.opacity = '1';
+            }
+        });
         
         // Lazy load map function with correct Google Maps address
         function loadMap(element) {

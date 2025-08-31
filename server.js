@@ -42,17 +42,22 @@ app.use(helmet({
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            imgSrc: ["'self'", "data:", "https:"],
-            scriptSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https:", "https://images.unsplash.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
             frameSrc: ["'self'", "https://www.google.com"],
             connectSrc: ["'self'"],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"],
+            frameAncestors: ["'self'"],
+            upgradeInsecureRequests: []
         },
     },
     crossOriginEmbedderPolicy: false,
 }));
 
 app.use(cors({
-    origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000', 'https://rhylcarboot.com'],
+    origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000', 'https://rhylcarboot.com', 'https://rhyl-carboot-sale.onrender.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
