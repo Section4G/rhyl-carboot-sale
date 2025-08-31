@@ -351,7 +351,7 @@
             e.preventDefault();
             
             const formData = new FormData(e.target);
-            formData.append('password', document.getElementById('galleryPassword').value);
+            // Password is already included in the form data, no need to append again
             
             try {
                 const response = await fetch('/api/gallery/upload', {
@@ -377,7 +377,7 @@
             e.preventDefault();
             
             const formData = new FormData(e.target);
-            formData.append('password', document.getElementById('heroPassword').value);
+            // Password is already included in the form data, no need to append again
             
             try {
                 const response = await fetch('/api/hero-background/upload', {

@@ -89,6 +89,12 @@ function validateStatusData(req, res, next) {
 function validatePassword(req, res, next) {
     const { password } = req.body;
     
+    console.log('🔐 Password validation:', {
+        provided: password ? '***' : 'undefined',
+        expected: ADMIN_PASSWORD,
+        match: password === ADMIN_PASSWORD
+    });
+    
     if (!password || password !== ADMIN_PASSWORD) {
         return res.status(401).json({ error: 'Invalid password' });
     }
