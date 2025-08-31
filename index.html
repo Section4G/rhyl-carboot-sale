@@ -997,6 +997,14 @@
 
     <!-- JavaScript -->
     <script>
+        // Ensure content is visible even if JavaScript fails
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) {
+                mainContent.style.opacity = '1';
+            }
+        });
+        
         // Theme management
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
