@@ -161,14 +161,19 @@ const uploadHero = multer({
     fileFilter: imageFileFilter
 });
 
-// Serve static files with caching
+// Serve static files with cache-busting
 app.use(express.static(__dirname, {
-    maxAge: '1d',
+    maxAge: '1h', // Reduced from 1 day to 1 hour
     etag: true,
     lastModified: true,
     setHeaders: (res, path) => {
         if (path.endsWith('.css') || path.endsWith('.js')) {
-            res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day
+            res.setHeader('Cache-Control', 'public, max-age=3600, must-revalidate'); // 1 hour with must-revalidate
+        }
+        if (path.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
         }
     }
 }));
