@@ -1,0 +1,38 @@
+{
+  "name": "rhyl-carboot-render",
+  "version": "1.0.0",
+  "description": "Rhyl Car Boot Sale website deployed on Render",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "car-boot",
+    "rhyl",
+    "render",
+    "market",
+    "north-wales"
+  ],
+  "author": "Rhyl Showfield Car Boot",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^7.2.0",
+    "multer": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rhylcarboot/website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rhylcarboot/website/issues"
+  },
+  "homepage": "https://rhylcarboot.com"
+}
